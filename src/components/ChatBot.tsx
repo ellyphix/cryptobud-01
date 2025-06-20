@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles, TrendingUp, Leaf, Info } from 'lucide-react';
+import { Send, Sparkles, TrendingUp, Leaf, Info, Loader } from 'lucide-react';
 import { ChatMessage } from './ChatMessage';
-import { CryptoAnalyzer } from '../CryptoAnalyzer';
-import { BOT_PERSONALITY } from '../constants';
+import { aiService } from '../services/AIService';
 import { ChatMessage as ChatMessageType } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { useChatHistory } from '../hooks/useChatHistory';
@@ -31,7 +30,7 @@ export const ChatBot: React.FC = () => {
       // Initial greeting for new sessions
       const greeting: ChatMessageType = {
         id: Date.now().toString(),
-        text: BOT_PERSONALITY.greeting,
+        text: `👋 **Welcome to CryptoBuddy!**\n\nI'm your AI-powered cryptocurrency assistant with access to real-time market data. I can help you with:\n\n📊 **Live price tracking & analysis**\n💰 **Investment insights & recommendations**\n🌱 **Sustainability assessments**\n⚖️ **Cryptocurrency comparisons**\n📰 **Latest market news & trends**\n🎓 **Crypto education & explanations**\n\n💡 **Try asking me:**\n• "What's Bitcoin's current price?"\n• "Which crypto is most sustainable?"\n• "Compare Ethereum vs Cardano"\n• "Should I invest in Solana?"\n• "Latest crypto news"\n\nWhat would you like to know about the crypto market today?`,
         isBot: true,
         timestamp: new Date()
       };
@@ -60,7 +59,7 @@ export const ChatBot: React.FC = () => {
         // Add bot greeting to new session
         const greeting: ChatMessageType = {
           id: (Date.now() + 1).toString(),
-          text: BOT_PERSONALITY.greeting,
+          text: `👋 **Welcome to CryptoBuddy!**\n\nI'm your AI-powered cryptocurrency assistant with access to real-time market data. What would you like to know about the crypto market?`,
           isBot: true,
           timestamp: new Date()
         };
@@ -70,7 +69,7 @@ export const ChatBot: React.FC = () => {
   };
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || isTyping) return;
 
     const userMessage = inputValue.trim();
     setInputValue('');
@@ -79,29 +78,25 @@ export const ChatBot: React.FC = () => {
     // Show typing indicator
     setIsTyping(true);
 
-    // Simulate thinking time
-    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
-
-    // Generate response
-    let response: string;
-    
-    if (userMessage.toLowerCase().includes('help') || userMessage.toLowerCase().includes('commands')) {
-      response = `I can help you with crypto analysis! Try asking me:\n\n🔹 "Which crypto is most sustainable?"\n🔹 "What's the best crypto for profit?"\n🔹 "Tell me about Bitcoin"\n🔹 "Compare Ethereum vs Cardano"\n🔹 "What should I invest in?"\n\n${CryptoAnalyzer.getRandomInsight()}`;
-    } else if (userMessage.toLowerCase().includes('thank') || userMessage.toLowerCase().includes('thanks')) {
-      response = `You're welcome! 😊 Remember, I'm always here to help you make informed crypto decisions. ${BOT_PERSONALITY.disclaimer}`;
-    } else if (userMessage.toLowerCase().includes('hello') || userMessage.toLowerCase().includes('hi')) {
-      response = `Hello again! 👋 Ready to explore some crypto opportunities? Ask me about sustainability, profitability, or any specific coin you're curious about!`;
-    } else {
-      response = CryptoAnalyzer.analyzeQuery(userMessage);
+    try {
+      // Get AI response
+      const aiResponse = await aiService.processQuery(userMessage);
       
-      // Add disclaimer for investment advice
-      if (userMessage.toLowerCase().includes('invest') || userMessage.toLowerCase().includes('buy')) {
-        response += `\n\n${BOT_PERSONALITY.disclaimer}`;
-      }
+      // Simulate realistic thinking time based on query complexity
+      const thinkingTime = Math.min(2000 + userMessage.length * 50, 5000);
+      await new Promise(resolve => setTimeout(resolve, thinkingTime));
+      
+      setIsTyping(false);
+      addMessage(aiResponse.message, true);
+      
+    } catch (error) {
+      console.error('Chat error:', error);
+      setIsTyping(false);
+      addMessage(
+        "I apologize, but I'm experiencing some technical difficulties accessing the latest market data. Please try again in a moment, or ask me about general cryptocurrency concepts that I can help explain!",
+        true
+      );
     }
-
-    setIsTyping(false);
-    addMessage(response, true);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -112,9 +107,9 @@ export const ChatBot: React.FC = () => {
   };
 
   const quickActions = [
-    { icon: TrendingUp, text: "Best for profit", query: "Which crypto is best for profitability?" },
-    { icon: Leaf, text: "Most sustainable", query: "Which crypto is most sustainable?" },
-    { icon: Info, text: "Compare coins", query: "Compare Bitcoin vs Ethereum" }
+    { icon: TrendingUp, text: "Bitcoin price", query: "What's the current price of Bitcoin?" },
+    { icon: Leaf, text: "Sustainable cryptos", query: "Which cryptocurrencies are most sustainable?" },
+    { icon: Info, text: "Market analysis", query: "Give me a current crypto market analysis" }
   ];
 
   return (
@@ -126,8 +121,8 @@ export const ChatBot: React.FC = () => {
             <Sparkles className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold">{BOT_PERSONALITY.name}</h1>
-            <p className="text-sm text-emerald-100">Your AI-Powered Financial Sidekick</p>
+            <h1 className="text-xl font-bold">CryptoBuddy AI</h1>
+            <p className="text-sm text-emerald-100">Real-time Crypto Intelligence</p>
           </div>
         </div>
       </div>
@@ -141,13 +136,16 @@ export const ChatBot: React.FC = () => {
         {isTyping && (
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white animate-pulse" />
+              <Loader className="w-5 h-5 text-white animate-spin" />
             </div>
             <div className="bg-white rounded-2xl px-4 py-3 shadow-md border border-gray-100">
-              <div className="flex gap-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              <div className="flex items-center gap-2 text-gray-600">
+                <div className="flex gap-1">
+                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                </div>
+                <span className="text-sm">Analyzing market data...</span>
               </div>
             </div>
           </div>
@@ -183,10 +181,11 @@ export const ChatBot: React.FC = () => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Ask me about crypto investments..."
+              placeholder="Ask me anything about cryptocurrency..."
               className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
               rows={1}
               style={{ minHeight: '48px', maxHeight: '120px' }}
+              disabled={isTyping}
             />
           </div>
           <button

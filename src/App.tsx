@@ -58,44 +58,38 @@ const AppContent: React.FC = () => {
               </div>
               <div>
                 <h1 className="text-2xl font-bold">CryptoBuddy</h1>
-                <p className="text-sm text-gray-300">AI Financial Sidekick</p>
+                <p className="text-sm text-gray-300">AI Crypto Intelligence</p>
               </div>
             </div>
             
             <div className="mb-6">
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
                 <Shield className="w-5 h-5 text-emerald-400" />
-                Smart Analysis
+                Real-Time Analysis
               </h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <TrendingUp className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-sm">Profitability Focus</p>
-                    <p className="text-xs text-gray-400">Price trends & market cap analysis</p>
+                    <p className="font-medium text-sm">Live Market Data</p>
+                    <p className="text-xs text-gray-400">Real-time prices, trends & analysis</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Leaf className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-sm">Sustainability Scoring</p>
-                    <p className="text-xs text-gray-400">Energy efficiency & eco-friendliness</p>
+                    <p className="font-medium text-sm">Sustainability Insights</p>
+                    <p className="text-xs text-gray-400">Energy efficiency & eco-impact scoring</p>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-              <h3 className="font-semibold text-sm mb-2 text-yellow-400">⚠️ Important Disclaimer</h3>
+              <h3 className="font-semibold text-sm mb-2 text-yellow-400">⚠️ Investment Disclaimer</h3>
               <p className="text-xs text-gray-300 leading-relaxed">
-                Cryptocurrency investments are highly volatile and risky. This bot provides educational analysis only. 
-                Always conduct your own research and never invest more than you can afford to lose.
-              </p>
-            </div>
-
-            <div className="mt-6 pt-6 border-t border-white/10">
-              <p className="text-xs text-gray-400 text-center">
-                Assignment: Week 1 - AI-Powered Crypto Advisor
+                Cryptocurrency investments carry high risk and volatility. This AI provides educational analysis only. 
+                Always conduct thorough research and never invest more than you can afford to lose.
               </p>
             </div>
           </div>
