@@ -29,10 +29,9 @@ export const ChatBot: React.FC = () => {
     if (currentSession) {
       setMessages(currentSession.messages);
     } else {
-      // Enhanced initial greeting
       const greeting: ChatMessageType = {
         id: Date.now().toString(),
-        text: `🚀 **Welcome to CryptoBuddy - Your AI Crypto Intelligence!**\n\nI'm your advanced AI assistant powered by real-time market data and natural language processing. I can help you with:\n\n📊 **Live Market Analysis**\n• Real-time prices and trends\n• Market cap and volume data\n• Technical indicators\n\n💰 **Investment Intelligence**\n• Portfolio recommendations\n• Risk assessments\n• Profit/loss calculations\n\n🌱 **Sustainability Insights**\n• Energy consumption analysis\n• Eco-friendly crypto rankings\n• Environmental impact scores\n\n🤖 **General AI Assistant**\n• Answer any questions\n• Explain complex topics\n• Have natural conversations\n\n💡 **Try asking me:**\n• "What's Bitcoin's current price?"\n• "Compare Ethereum vs Cardano sustainability"\n• "Should I invest in Solana?"\n• "Explain DeFi in simple terms"\n• "What's 2+2?" (I can handle general questions too!)\n\n⚠️ **Important:** All investment information is educational only. Cryptocurrency is highly risky - always do your own research!\n\nWhat would you like to explore today? 🌟`,
+        text: `🚀 **Welcome to CryptoBuddy - Your Professional Crypto Intelligence Platform!**\n\nI'm your advanced AI assistant powered by real-time market data and sophisticated analysis. I can help you with:\n\n📊 **Live Market Analysis**\n• Real-time prices and trends\n• Market cap and volume data\n• Technical indicators\n\n💰 **Investment Intelligence**\n• Portfolio recommendations\n• Risk assessments\n• Profit/loss calculations\n\n🌱 **Sustainability Insights**\n• Energy consumption analysis\n• Eco-friendly crypto rankings\n• Environmental impact scores\n\n🤖 **General Assistant**\n• Answer any questions\n• Explain complex topics\n• Have natural conversations\n\n💡 **Try asking me:**\n• "What's Bitcoin's current price?"\n• "Compare Ethereum vs Cardano sustainability"\n• "Should I invest in Solana?"\n• "Explain DeFi in simple terms"\n• "What's 2+2?" (I can handle general questions too!)\n\n⚠️ **Important:** All investment information is educational only. Cryptocurrency is highly risky - always do your own research!\n\nWhat would you like to explore today? 🌟`,
         isBot: true,
         timestamp: new Date()
       };
@@ -51,14 +50,11 @@ export const ChatBot: React.FC = () => {
     const updatedMessages = [...messages, message];
     setMessages(updatedMessages);
     
-    // Save to history if user is authenticated
     if (user) {
       if (currentSession) {
         updateSession(currentSession.id, updatedMessages);
       } else if (!isBot) {
-        // Create new session with first user message
         const newSession = createNewSession(message);
-        // Add bot greeting to new session
         const greeting: ChatMessageType = {
           id: (Date.now() + 1).toString(),
           text: `🚀 **Welcome back to CryptoBuddy!**\n\nI'm ready to help you with cryptocurrency analysis and any other questions you might have. What would you like to know?`,
@@ -78,25 +74,20 @@ export const ChatBot: React.FC = () => {
     setSuggestions([]);
     addMessage(userMessage, false);
 
-    // Show typing indicator
     setIsTyping(true);
 
     try {
-      // Analyze query complexity for response time simulation
       const complexity = NLPService.getQueryComplexity(userMessage);
       const baseTime = complexity === 'simple' ? 1000 : complexity === 'medium' ? 2000 : 3000;
       const thinkingTime = baseTime + Math.random() * 1000;
       
-      // Get AI response
       const aiResponse = await aiService.processQuery(userMessage);
       
-      // Simulate realistic thinking time
       await new Promise(resolve => setTimeout(resolve, thinkingTime));
       
       setIsTyping(false);
       addMessage(aiResponse.message, true);
       
-      // Generate suggestions for follow-up questions
       const newSuggestions = NLPService.generateSuggestions(userMessage);
       setSuggestions(newSuggestions);
       
@@ -131,15 +122,14 @@ export const ChatBot: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Enhanced Header */}
       <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-4 shadow-lg">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
             <Sparkles className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold">CryptoBuddy AI</h1>
-            <p className="text-sm text-emerald-100">Real-time Intelligence • General AI • NLP Powered</p>
+            <h1 className="text-xl font-bold">CryptoBuddy Intelligence</h1>
+            <p className="text-sm text-emerald-100">Real-time Analysis • Professional Insights • Advanced AI</p>
           </div>
           <div className="ml-auto">
             <div className="flex items-center gap-2 text-xs bg-white/10 px-3 py-1 rounded-full">
@@ -150,7 +140,6 @@ export const ChatBot: React.FC = () => {
         </div>
       </div>
 
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message) => (
           <ChatMessage key={message.id} message={message} />
@@ -168,7 +157,7 @@ export const ChatBot: React.FC = () => {
                   <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                   <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
-                <span className="text-sm">Processing with AI & live data...</span>
+                <span className="text-sm">Processing with advanced AI & live data...</span>
               </div>
             </div>
           </div>
@@ -176,7 +165,6 @@ export const ChatBot: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Suggestions */}
       {suggestions.length > 0 && (
         <div className="px-4 pb-2">
           <p className="text-xs text-gray-500 mb-2">💡 Suggested follow-ups:</p>
@@ -194,7 +182,6 @@ export const ChatBot: React.FC = () => {
         </div>
       )}
 
-      {/* Quick Actions */}
       {messages.length <= 2 && (
         <div className="px-4 pb-2">
           <p className="text-xs text-gray-500 mb-2">🚀 Quick start:</p>
@@ -215,7 +202,6 @@ export const ChatBot: React.FC = () => {
         </div>
       )}
 
-      {/* Enhanced Input */}
       <div className="p-4 bg-white border-t border-gray-200">
         <div className="flex gap-3 items-end">
           <div className="flex-1 relative">
@@ -242,7 +228,6 @@ export const ChatBot: React.FC = () => {
           </button>
         </div>
         
-        {/* Disclaimer */}
         <div className="mt-2 text-xs text-gray-500 text-center">
           ⚠️ Crypto investments are risky. This is educational content, not financial advice.
         </div>

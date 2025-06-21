@@ -8,7 +8,7 @@ export interface AIResponse {
   confidence?: number;
 }
 
-class AIAssistantService {
+class CryptoBuddyAIService {
   private readonly sustainabilityData = {
     'bitcoin': { score: 3, reason: 'High energy consumption due to Proof of Work consensus', energyPerTx: '741 kWh' },
     'ethereum': { score: 8, reason: 'Transitioned to Proof of Stake, significantly reducing energy usage', energyPerTx: '0.0026 kWh' },
@@ -26,11 +26,9 @@ class AIAssistantService {
     const lowerQuery = query.toLowerCase();
     
     try {
-      // Check if it's a crypto-related query
       if (this.isCryptoRelated(lowerQuery)) {
         return await this.handleCryptoQuery(lowerQuery);
       } else {
-        // Handle general AI questions using free AI service
         return await this.handleGeneralQuery(query);
       }
     } catch (error) {
@@ -57,7 +55,6 @@ class AIAssistantService {
 
   private async handleGeneralQuery(query: string): Promise<AIResponse> {
     try {
-      // Using Hugging Face's free inference API
       const response = await axios.post(
         'https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium',
         {
@@ -70,7 +67,7 @@ class AIAssistantService {
         },
         {
           headers: {
-            'Authorization': 'Bearer hf_demo', // Using demo token for free tier
+            'Authorization': 'Bearer hf_demo',
             'Content-Type': 'application/json'
           },
           timeout: 10000
@@ -79,8 +76,6 @@ class AIAssistantService {
 
       if (response.data && response.data[0] && response.data[0].generated_text) {
         let aiResponse = response.data[0].generated_text.replace(query, '').trim();
-        
-        // Clean up the response
         aiResponse = aiResponse.replace(/^[:\-\s]+/, '').trim();
         
         if (aiResponse.length < 10) {
@@ -89,7 +84,7 @@ class AIAssistantService {
 
         return {
           message: `🤖 ${aiResponse}\n\n💡 *I'm CryptoBuddy, specialized in cryptocurrency! For crypto-related questions, I can provide real-time market data and detailed analysis.*`,
-          sources: ['Hugging Face AI'],
+          sources: ['Advanced AI Processing'],
           confidence: 0.8
         };
       } else {
@@ -97,8 +92,6 @@ class AIAssistantService {
       }
     } catch (error) {
       console.error('General AI query error:', error);
-      
-      // Fallback to rule-based responses for common questions
       return this.handleGeneralQueryFallback(query);
     }
   }
@@ -106,15 +99,13 @@ class AIAssistantService {
   private handleGeneralQueryFallback(query: string): AIResponse {
     const lowerQuery = query.toLowerCase();
     
-    // Common greetings
     if (/^(hi|hello|hey|good morning|good afternoon|good evening)/.test(lowerQuery)) {
       return {
-        message: "👋 Hello! I'm CryptoBuddy, your AI-powered cryptocurrency assistant! I can help you with real-time crypto prices, market analysis, investment insights, and general questions too. What would you like to know?",
+        message: "👋 Hello! I'm CryptoBuddy, your professional cryptocurrency intelligence platform! I can help you with real-time crypto prices, market analysis, investment insights, and general questions too. What would you like to know?",
         confidence: 0.9
       };
     }
     
-    // How are you
     if (/how are you|how do you do/.test(lowerQuery)) {
       return {
         message: "I'm doing great, thank you for asking! 😊 I'm here and ready to help you navigate the exciting world of cryptocurrency. The markets are always moving, and I'm constantly analyzing the latest data to provide you with the best insights. How can I assist you today?",
@@ -122,23 +113,20 @@ class AIAssistantService {
       };
     }
     
-    // What can you do
     if (/what can you do|what are you|who are you|your capabilities/.test(lowerQuery)) {
       return {
-        message: "🚀 I'm CryptoBuddy, your advanced AI cryptocurrency assistant! Here's what I can do:\n\n📊 **Crypto Expertise:**\n• Real-time price tracking & analysis\n• Market trends and predictions\n• Sustainability assessments\n• Investment guidance\n• Portfolio recommendations\n\n🤖 **General AI:**\n• Answer general questions\n• Explain complex topics\n• Provide information on various subjects\n• Have conversations\n\n💡 **Special Features:**\n• Risk assessment and warnings\n• Educational content\n• News and market updates\n\nWhat would you like to explore?",
+        message: "🚀 I'm CryptoBuddy, your professional cryptocurrency intelligence platform! Here's what I can do:\n\n📊 **Crypto Expertise:**\n• Real-time price tracking & analysis\n• Market trends and predictions\n• Sustainability assessments\n• Investment guidance\n• Portfolio recommendations\n\n🤖 **General Intelligence:**\n• Answer general questions\n• Explain complex topics\n• Provide information on various subjects\n• Have conversations\n\n💡 **Special Features:**\n• Risk assessment and warnings\n• Educational content\n• News and market updates\n\nWhat would you like to explore?",
         confidence: 0.95
       };
     }
     
-    // Weather
     if (/weather|temperature|rain|sunny|cloudy/.test(lowerQuery)) {
       return {
-        message: "🌤️ I don't have access to real-time weather data, but I can tell you that the crypto markets are always experiencing their own kind of weather! 📈📉\n\nFor actual weather information, I'd recommend checking a weather app or website. But if you want to know about the 'market weather' - whether it's a bull or bear market - I'm your guy! 🐂🐻",
+        message: "🌤️ I don't have access to real-time weather data, but I can tell you that the crypto markets are always experiencing their own kind of weather! 📈📉\n\nFor actual weather information, I'd recommend checking a weather app or website. But if you want to know about the 'market weather' - whether it's a bull or bear market - I'm your expert! 🐂🐻",
         confidence: 0.8
       };
     }
     
-    // Time
     if (/what time|current time|time is it/.test(lowerQuery)) {
       const currentTime = new Date().toLocaleString();
       return {
@@ -147,13 +135,10 @@ class AIAssistantService {
       };
     }
     
-    // Math questions
     if (/calculate|math|plus|minus|multiply|divide|\+|\-|\*|\/|\d+/.test(lowerQuery)) {
       try {
-        // Simple math evaluation (be careful with eval in production)
         const mathExpression = lowerQuery.match(/[\d+\-*/\s().]+/);
         if (mathExpression) {
-          // Basic safety check
           const safeExpression = mathExpression[0].replace(/[^0-9+\-*/().\s]/g, '');
           if (safeExpression && /^[\d+\-*/().\s]+$/.test(safeExpression)) {
             const result = Function('"use strict"; return (' + safeExpression + ')')();
@@ -168,7 +153,6 @@ class AIAssistantService {
       }
     }
     
-    // Default response for unrecognized general queries
     return {
       message: `🤔 That's an interesting question! While I'm primarily specialized in cryptocurrency analysis and market data, I can try to help with general topics too.\n\n💡 **Here's what I'm best at:**\n• Cryptocurrency prices and analysis\n• Market trends and predictions\n• Investment advice and risk assessment\n• Blockchain technology explanations\n• General conversations\n\nCould you rephrase your question or ask me something about crypto? I'd love to show you my expertise! 🚀`,
       confidence: 0.6
@@ -177,47 +161,22 @@ class AIAssistantService {
 
   private async handleCryptoQuery(query: string): Promise<AIResponse> {
     try {
-      // Price and market data queries
       if (this.isPriceQuery(query)) {
         return await this.handlePriceQuery(query);
       }
       
-      // Market analysis queries
       if (this.isMarketAnalysisQuery(query)) {
         return await this.handleMarketAnalysis(query);
       }
       
-      // Sustainability queries
       if (this.isSustainabilityQuery(query)) {
         return await this.handleSustainabilityQuery(query);
       }
       
-      // Investment advice queries
       if (this.isInvestmentQuery(query)) {
         return await this.handleInvestmentQuery(query);
       }
       
-      // Comparison queries
-      if (this.isComparisonQuery(query)) {
-        return await this.handleComparisonQuery(query);
-      }
-      
-      // Technical analysis queries
-      if (this.isTechnicalQuery(query)) {
-        return await this.handleTechnicalQuery(query);
-      }
-      
-      // News and trends queries
-      if (this.isNewsQuery(query)) {
-        return await this.handleNewsQuery(query);
-      }
-      
-      // Educational queries
-      if (this.isEducationalQuery(query)) {
-        return await this.handleEducationalQuery(query);
-      }
-      
-      // Default crypto response
       return await this.handleDefaultCryptoQuery(query);
       
     } catch (error) {
@@ -243,22 +202,6 @@ class AIAssistantService {
 
   private isInvestmentQuery(query: string): boolean {
     return /invest|buy|sell|portfolio|profit|best|recommend|should i|strategy/.test(query);
-  }
-
-  private isComparisonQuery(query: string): boolean {
-    return /compare|vs|versus|difference|better|which|between/.test(query);
-  }
-
-  private isTechnicalQuery(query: string): boolean {
-    return /technical|chart|support|resistance|rsi|macd|fibonacci|candlestick/.test(query);
-  }
-
-  private isNewsQuery(query: string): boolean {
-    return /news|latest|update|happening|recent|today|headlines/.test(query);
-  }
-
-  private isEducationalQuery(query: string): boolean {
-    return /what is|how does|explain|learn|understand|blockchain|defi|nft|mining/.test(query);
   }
 
   private async handlePriceQuery(query: string): Promise<AIResponse> {
@@ -302,7 +245,6 @@ class AIAssistantService {
       }
     }
     
-    // Fallback to general market overview
     const topCryptos = await cryptoAPI.getTopCryptocurrencies(8);
     const priceOverview = topCryptos.map((crypto, index) => 
       `${index + 1}. **${crypto.name}**: ${cryptoAPI.formatPrice(crypto.current_price)} (${crypto.price_change_percentage_24h > 0 ? '+' : ''}${crypto.price_change_percentage_24h.toFixed(2)}%)`
@@ -387,7 +329,6 @@ class AIAssistantService {
       }
     }
     
-    // General sustainability ranking
     const sustainableCoins = Object.entries(this.sustainabilityData)
       .sort(([,a], [,b]) => b.score - a.score)
       .slice(0, 6)
@@ -416,22 +357,20 @@ class AIAssistantService {
       cryptoAPI.getGlobalMarketData()
     ]);
     
-    // Advanced analysis
     const marketTrend = globalData.data.market_cap_change_percentage_24h_usd > 0 ? 'bullish' : 'bearish';
     const strongPerformers = topCryptos.filter(c => c.price_change_percentage_24h > 5);
     const stableCoins = topCryptos.filter(c => Math.abs(c.price_change_percentage_24h) < 2);
-    const highVolume = topCryptos.filter(c => c.total_volume > 1000000000); // >$1B volume
+    const highVolume = topCryptos.filter(c => c.total_volume > 1000000000);
     
-    // Risk assessment
     const volatileCoins = topCryptos.filter(c => Math.abs(c.price_change_percentage_24h) > 10);
     const marketCapTiers = {
-      large: topCryptos.filter(c => c.market_cap > 10000000000), // >$10B
-      mid: topCryptos.filter(c => c.market_cap > 1000000000 && c.market_cap <= 10000000000), // $1B-$10B
-      small: topCryptos.filter(c => c.market_cap <= 1000000000) // <$1B
+      large: topCryptos.filter(c => c.market_cap > 10000000000),
+      mid: topCryptos.filter(c => c.market_cap > 1000000000 && c.market_cap <= 10000000000),
+      small: topCryptos.filter(c => c.market_cap <= 1000000000)
     };
     
     return {
-      message: `💼 **Advanced Investment Analysis & Strategy**\n\n` +
+      message: `💼 **Professional Investment Analysis & Strategy**\n\n` +
               `📊 **Current Market Conditions:**\n` +
               `• Sentiment: ${marketTrend.charAt(0).toUpperCase() + marketTrend.slice(1)} (${globalData.data.market_cap_change_percentage_24h_usd.toFixed(2)}%)\n` +
               `• Bitcoin Dominance: ${globalData.data.market_cap_percentage.btc.toFixed(1)}%\n` +
@@ -460,7 +399,7 @@ class AIAssistantService {
               `🕐 **Analysis Time:** ${new Date().toLocaleString()}` +
               this.riskDisclaimer,
       data: { topCryptos, globalData, analysis: { strongPerformers, stableCoins, marketCapTiers } },
-      sources: ['CoinGecko API', 'Advanced Market Analysis', 'Risk Assessment Engine'],
+      sources: ['CoinGecko API', 'Professional Market Analysis', 'Risk Assessment Engine'],
       confidence: 0.88
     };
   }
@@ -473,7 +412,7 @@ class AIAssistantService {
     ]);
     
     return {
-      message: `🚀 **CryptoBuddy - Your AI Crypto Intelligence**\n\n` +
+      message: `🚀 **CryptoBuddy - Your Professional Crypto Intelligence Platform**\n\n` +
               `I'm here to help you navigate the cryptocurrency world with real-time data and expert analysis!\n\n` +
               `📊 **Current Market Snapshot:**\n` +
               `• Total Market Cap: ${cryptoAPI.formatMarketCap(globalData.data.total_market_cap.usd)}\n` +
@@ -499,7 +438,6 @@ class AIAssistantService {
     };
   }
 
-  // Helper methods
   private extractCryptoName(query: string): string | null {
     const cryptoNames = ['bitcoin', 'ethereum', 'cardano', 'solana', 'polkadot', 'chainlink', 'polygon', 'avalanche', 'binance', 'ripple', 'dogecoin', 'litecoin', 'btc', 'eth', 'ada', 'sol', 'dot', 'link', 'matic', 'avax', 'bnb', 'xrp', 'doge', 'ltc'];
     return cryptoNames.find(name => query.toLowerCase().includes(name)) || null;
@@ -551,7 +489,6 @@ class AIAssistantService {
       sentiment += `🔻 **STRONG BEAR MARKET** - Heavy selling, fear dominates\n`;
     }
     
-    // Bitcoin dominance analysis
     if (btcDominance > 60) {
       sentiment += `₿ **Bitcoin flight to safety** - Investors seeking stability in BTC\n`;
     } else if (btcDominance > 45) {
@@ -560,7 +497,6 @@ class AIAssistantService {
       sentiment += `🌟 **ALT SEASON ACTIVE** - Altcoins outperforming Bitcoin\n`;
     }
     
-    // Market breadth
     const totalCoins = gainersCount + losersCount;
     const gainersPercentage = (gainersCount / totalCoins) * 100;
     
@@ -588,39 +524,6 @@ class AIAssistantService {
       return `🚨 **HIGH ENVIRONMENTAL IMPACT.** Consider more sustainable alternatives if environmental factors are important to you.`;
     }
   }
-
-  // Additional helper methods for other query types would go here...
-  private async handleComparisonQuery(query: string): Promise<AIResponse> {
-    // Implementation for comparison queries
-    return {
-      message: "Comparison feature coming soon!" + this.riskDisclaimer,
-      confidence: 0.5
-    };
-  }
-
-  private async handleTechnicalQuery(query: string): Promise<AIResponse> {
-    // Implementation for technical analysis
-    return {
-      message: "Technical analysis feature coming soon!" + this.riskDisclaimer,
-      confidence: 0.5
-    };
-  }
-
-  private async handleNewsQuery(query: string): Promise<AIResponse> {
-    // Implementation for news queries
-    return {
-      message: "News feature coming soon!" + this.riskDisclaimer,
-      confidence: 0.5
-    };
-  }
-
-  private async handleEducationalQuery(query: string): Promise<AIResponse> {
-    // Implementation for educational content
-    return {
-      message: "Educational content feature coming soon!" + this.riskDisclaimer,
-      confidence: 0.5
-    };
-  }
 }
 
-export const aiService = new AIAssistantService();
+export const aiService = new CryptoBuddyAIService();
