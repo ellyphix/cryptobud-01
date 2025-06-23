@@ -40,8 +40,8 @@ export const CRYPTO_DB: CryptoDatabase = {
 };
 
 export const BOT_PERSONALITY = {
-  name: "CryptoBuddy",
-  greeting: "Hey there! 👋 I'm CryptoBuddy, your AI-powered financial sidekick! I'm here to help you navigate the crypto world with smart insights on profitability and sustainability. What would you like to know?",
+  name: "CryptoBud",
+  greeting: "Hey there! 👋 I'm CryptoBud, your proprietary AI-powered financial sidekick! I'm here to help you navigate the crypto world with smart insights on profitability and sustainability. What would you like to know?",
   disclaimer: "⚠️ Remember: Crypto investments are high-risk. Always do your own research and never invest more than you can afford to lose!"
 };
 

@@ -31,7 +31,7 @@ export const ChatBot: React.FC = () => {
     } else {
       const greeting: ChatMessageType = {
         id: Date.now().toString(),
-        text: `🚀 **Welcome to CryptoBuddy - Your Professional Crypto Intelligence Platform!**\n\nI'm your advanced AI assistant powered by real-time market data and sophisticated analysis. I can help you with:\n\n📊 **Live Market Analysis**\n• Real-time prices and trends\n• Market cap and volume data\n• Technical indicators\n\n💰 **Investment Intelligence**\n• Portfolio recommendations\n• Risk assessments\n• Profit/loss calculations\n\n🌱 **Sustainability Insights**\n• Energy consumption analysis\n• Eco-friendly crypto rankings\n• Environmental impact scores\n\n🤖 **General Assistant**\n• Answer any questions\n• Explain complex topics\n• Have natural conversations\n\n💡 **Try asking me:**\n• "What's Bitcoin's current price?"\n• "Compare Ethereum vs Cardano sustainability"\n• "Should I invest in Solana?"\n• "Explain DeFi in simple terms"\n• "What's 2+2?" (I can handle general questions too!)\n\n⚠️ **Important:** All investment information is educational only. Cryptocurrency is highly risky - always do your own research!\n\nWhat would you like to explore today? 🌟`,
+        text: `🚀 **Welcome to CryptoBud - Your Proprietary Crypto Intelligence Platform!**\n\nI'm your advanced AI assistant powered by real-time market data and sophisticated analysis. I can help you with:\n\n📊 **Live Market Analysis**\n• Real-time prices and trends\n• Market cap and volume data\n• Technical indicators\n\n💰 **Investment Intelligence**\n• Portfolio recommendations\n• Risk assessments\n• Profit/loss calculations\n\n🌱 **Sustainability Insights**\n• Energy consumption analysis\n• Eco-friendly crypto rankings\n• Environmental impact scores\n\n🤖 **General Assistant**\n• Answer any questions\n• Explain complex topics\n• Have natural conversations\n\n💡 **Try asking me:**\n• "What's Bitcoin's current price?"\n• "Compare Ethereum vs Cardano sustainability"\n• "Should I invest in Solana?"\n• "Explain DeFi in simple terms"\n• "What's 2+2?" (I can handle general questions too!)\n\n⚠️ **Important:** All investment information is educational only. Cryptocurrency is highly risky - always do your own research!\n\nWhat would you like to explore today? 🌟`,
         isBot: true,
         timestamp: new Date()
       };
@@ -57,7 +57,7 @@ export const ChatBot: React.FC = () => {
         const newSession = createNewSession(message);
         const greeting: ChatMessageType = {
           id: (Date.now() + 1).toString(),
-          text: `🚀 **Welcome back to CryptoBuddy!**\n\nI'm ready to help you with cryptocurrency analysis and any other questions you might have. What would you like to know?`,
+          text: `🚀 **Welcome back to CryptoBud!**\n\nI'm ready to help you with cryptocurrency analysis and any other questions you might have. What would you like to know?`,
           isBot: true,
           timestamp: new Date()
         };
@@ -128,7 +128,7 @@ export const ChatBot: React.FC = () => {
             <Sparkles className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold">CryptoBuddy Intelligence</h1>
+            <h1 className="text-xl font-bold">CryptoBud Intelligence</h1>
             <p className="text-sm text-emerald-100">Real-time Analysis • Professional Insights • Advanced AI</p>
           </div>
           <div className="ml-auto">

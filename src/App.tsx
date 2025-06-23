@@ -31,7 +31,7 @@ const AppContent: React.FC = () => {
                 <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <LogIn className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">Join CryptoBuddy</h3>
+                <h3 className="text-lg font-semibold mb-2">Join CryptoBud</h3>
                 <p className="text-sm text-gray-300 mb-4">
                   Sign in to save your chat history and get personalized crypto insights
                 </p>
@@ -57,7 +57,7 @@ const AppContent: React.FC = () => {
                 <Sparkles className="w-7 h-7 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold">CryptoBuddy</h1>
+                <h1 className="text-2xl font-bold">CryptoBud</h1>
                 <p className="text-sm text-gray-300">AI Crypto Intelligence</p>
               </div>
             </div>

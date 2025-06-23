@@ -8,7 +8,7 @@ export interface AIResponse {
   confidence?: number;
 }
 
-class CryptoBuddyAIService {
+class CryptoBudAIService {
   private readonly sustainabilityData = {
     'bitcoin': { score: 3, reason: 'High energy consumption due to Proof of Work consensus', energyPerTx: '741 kWh' },
     'ethereum': { score: 8, reason: 'Transitioned to Proof of Stake, significantly reducing energy usage', energyPerTx: '0.0026 kWh' },
@@ -22,11 +22,31 @@ class CryptoBuddyAIService {
 
   private readonly riskDisclaimer = "\n\n⚠️ **IMPORTANT DISCLAIMER:** Cryptocurrency investments are extremely volatile and risky. Prices can fluctuate dramatically and you could lose your entire investment. This information is for educational purposes only and should not be considered financial advice. Always do your own research (DYOR) and never invest more than you can afford to lose. Consider consulting with a qualified financial advisor before making investment decisions.";
 
+  // If-else logic for conversation flow
+  private readonly conversationPatterns = {
+    greetings: ['hello', 'hi', 'hey', 'good morning', 'good afternoon', 'good evening'],
+    farewells: ['bye', 'goodbye', 'see you', 'farewell', 'take care'],
+    thanks: ['thank you', 'thanks', 'appreciate', 'grateful'],
+    help: ['help', 'assist', 'support', 'guide'],
+    capabilities: ['what can you do', 'your features', 'abilities', 'functions']
+  };
+
   async processQuery(query: string): Promise<AIResponse> {
     const lowerQuery = query.toLowerCase();
     
     try {
-      if (this.isCryptoRelated(lowerQuery)) {
+      // If-else conversation flow logic
+      if (this.matchesPattern(lowerQuery, this.conversationPatterns.greetings)) {
+        return this.handleGreeting();
+      } else if (this.matchesPattern(lowerQuery, this.conversationPatterns.farewells)) {
+        return this.handleFarewell();
+      } else if (this.matchesPattern(lowerQuery, this.conversationPatterns.thanks)) {
+        return this.handleThanks();
+      } else if (this.matchesPattern(lowerQuery, this.conversationPatterns.help)) {
+        return this.handleHelpRequest();
+      } else if (this.matchesPattern(lowerQuery, this.conversationPatterns.capabilities)) {
+        return this.handleCapabilitiesQuery();
+      } else if (this.isCryptoRelated(lowerQuery)) {
         return await this.handleCryptoQuery(lowerQuery);
       } else {
         return await this.handleGeneralQuery(query);
@@ -38,6 +58,63 @@ class CryptoBuddyAIService {
         confidence: 0.5
       };
     }
+  }
+
+  private matchesPattern(query: string, patterns: string[]): boolean {
+    return patterns.some(pattern => query.includes(pattern));
+  }
+
+  private handleGreeting(): AIResponse {
+    const greetings = [
+      "👋 Hello! I'm CryptoBud, your proprietary cryptocurrency intelligence platform! I'm here to help you navigate the crypto world with real-time data and expert analysis. What would you like to explore today?",
+      "🚀 Hey there! Welcome to CryptoBud! I can provide you with live crypto prices, market analysis, investment insights, and answer any questions you have. How can I assist you?",
+      "✨ Hi! I'm CryptoBud, your advanced AI crypto assistant. I'm equipped with real-time market data and can help with everything from price analysis to investment strategies. What interests you most?"
+    ];
+    
+    return {
+      message: greetings[Math.floor(Math.random() * greetings.length)],
+      confidence: 0.95
+    };
+  }
+
+  private handleFarewell(): AIResponse {
+    const farewells = [
+      "👋 Goodbye! Thanks for using CryptoBud. Remember to always do your own research before making any investment decisions. Come back anytime for the latest crypto insights!",
+      "🌟 Take care! I hope our conversation was helpful. Keep an eye on the markets and invest wisely. CryptoBud is here whenever you need crypto intelligence!",
+      "💫 See you later! Stay informed, stay safe, and remember - never invest more than you can afford to lose. CryptoBud will be here when you return!"
+    ];
+    
+    return {
+      message: farewells[Math.floor(Math.random() * farewells.length)],
+      confidence: 0.95
+    };
+  }
+
+  private handleThanks(): AIResponse {
+    const responses = [
+      "🙏 You're very welcome! I'm glad I could help. CryptoBud is always here to provide you with the latest crypto insights and analysis. Feel free to ask me anything else!",
+      "😊 My pleasure! That's what I'm here for. If you have any more questions about cryptocurrency or need market analysis, just let me know!",
+      "✨ Happy to help! CryptoBud's mission is to make crypto investing more informed and accessible. Don't hesitate to reach out with more questions!"
+    ];
+    
+    return {
+      message: responses[Math.floor(Math.random() * responses.length)],
+      confidence: 0.95
+    };
+  }
+
+  private handleHelpRequest(): AIResponse {
+    return {
+      message: `🆘 **CryptoBud Help Center**\n\nI'm here to assist you with:\n\n📊 **Crypto Analysis:**\n• Real-time prices and market data\n• Technical analysis and trends\n• Market cap and volume information\n\n💰 **Investment Guidance:**\n• Portfolio recommendations\n• Risk assessments\n• Profit/loss calculations\n\n🌱 **Sustainability Insights:**\n• Energy consumption analysis\n• Eco-friendly crypto rankings\n• Environmental impact scores\n\n🤖 **General Assistance:**\n• Answer questions on any topic\n• Explain complex concepts\n• Provide educational content\n\n💡 **How to use me:**\n• Ask specific questions like "What's Bitcoin's price?"\n• Request comparisons like "Compare ETH vs ADA"\n• Seek advice like "Should I invest in Solana?"\n• Or just chat naturally!\n\nWhat would you like help with specifically?`,
+      confidence: 0.95
+    };
+  }
+
+  private handleCapabilitiesQuery(): AIResponse {
+    return {
+      message: `🚀 **CryptoBud Capabilities Overview**\n\nI'm a proprietary AI-powered cryptocurrency intelligence platform with advanced features:\n\n🧠 **AI Decision-Making:**\n• Pattern recognition in market data\n• Sentiment analysis of queries\n• Risk assessment algorithms\n• Predictive modeling for trends\n\n📊 **Real-Time Data Processing:**\n• Live price feeds from CoinGecko API\n• Market cap and volume analysis\n• Technical indicator calculations\n• News sentiment integration\n\n🌱 **Sustainability Analysis:**\n• Energy consumption tracking\n• Environmental impact scoring\n• Eco-friendly investment recommendations\n\n💼 **Investment Intelligence:**\n• Portfolio optimization suggestions\n• Risk-reward analysis\n• Market timing insights\n• Diversification strategies\n\n🗣️ **Natural Language Processing:**\n• Understanding complex queries\n• Context-aware responses\n• Multi-intent recognition\n• Conversation flow management\n\nI combine if-else logic with advanced AI to provide accurate, helpful responses tailored to your needs!`,
+      confidence: 0.95
+    };
   }
 
   private isCryptoRelated(query: string): boolean {
@@ -83,7 +160,7 @@ class CryptoBuddyAIService {
         }
 
         return {
-          message: `🤖 ${aiResponse}\n\n💡 *I'm CryptoBuddy, specialized in cryptocurrency! For crypto-related questions, I can provide real-time market data and detailed analysis.*`,
+          message: `🤖 ${aiResponse}\n\n💡 *I'm CryptoBud, specialized in cryptocurrency! For crypto-related questions, I can provide real-time market data and detailed analysis.*`,
           sources: ['Advanced AI Processing'],
           confidence: 0.8
         };
@@ -99,43 +176,19 @@ class CryptoBuddyAIService {
   private handleGeneralQueryFallback(query: string): AIResponse {
     const lowerQuery = query.toLowerCase();
     
-    if (/^(hi|hello|hey|good morning|good afternoon|good evening)/.test(lowerQuery)) {
-      return {
-        message: "👋 Hello! I'm CryptoBuddy, your professional cryptocurrency intelligence platform! I can help you with real-time crypto prices, market analysis, investment insights, and general questions too. What would you like to know?",
-        confidence: 0.9
-      };
-    }
-    
-    if (/how are you|how do you do/.test(lowerQuery)) {
-      return {
-        message: "I'm doing great, thank you for asking! 😊 I'm here and ready to help you navigate the exciting world of cryptocurrency. The markets are always moving, and I'm constantly analyzing the latest data to provide you with the best insights. How can I assist you today?",
-        confidence: 0.9
-      };
-    }
-    
-    if (/what can you do|what are you|who are you|your capabilities/.test(lowerQuery)) {
-      return {
-        message: "🚀 I'm CryptoBuddy, your professional cryptocurrency intelligence platform! Here's what I can do:\n\n📊 **Crypto Expertise:**\n• Real-time price tracking & analysis\n• Market trends and predictions\n• Sustainability assessments\n• Investment guidance\n• Portfolio recommendations\n\n🤖 **General Intelligence:**\n• Answer general questions\n• Explain complex topics\n• Provide information on various subjects\n• Have conversations\n\n💡 **Special Features:**\n• Risk assessment and warnings\n• Educational content\n• News and market updates\n\nWhat would you like to explore?",
-        confidence: 0.95
-      };
-    }
-    
+    // If-else logic for common general queries
     if (/weather|temperature|rain|sunny|cloudy/.test(lowerQuery)) {
       return {
         message: "🌤️ I don't have access to real-time weather data, but I can tell you that the crypto markets are always experiencing their own kind of weather! 📈📉\n\nFor actual weather information, I'd recommend checking a weather app or website. But if you want to know about the 'market weather' - whether it's a bull or bear market - I'm your expert! 🐂🐻",
         confidence: 0.8
       };
-    }
-    
-    if (/what time|current time|time is it/.test(lowerQuery)) {
+    } else if (/what time|current time|time is it/.test(lowerQuery)) {
       const currentTime = new Date().toLocaleString();
       return {
         message: `🕐 The current time is ${currentTime}.\n\n⏰ Fun fact: Cryptocurrency markets never sleep! They trade 24/7, 365 days a year. Unlike traditional stock markets, you can buy and sell crypto anytime. Would you like to check the current crypto prices?`,
         confidence: 0.9
       };
-    }
-    
-    if (/calculate|math|plus|minus|multiply|divide|\+|\-|\*|\/|\d+/.test(lowerQuery)) {
+    } else if (/calculate|math|plus|minus|multiply|divide|\+|\-|\*|\/|\d+/.test(lowerQuery)) {
       try {
         const mathExpression = lowerQuery.match(/[\d+\-*/\s().]+/);
         if (mathExpression) {
@@ -163,22 +216,15 @@ class CryptoBuddyAIService {
     try {
       if (this.isPriceQuery(query)) {
         return await this.handlePriceQuery(query);
-      }
-      
-      if (this.isMarketAnalysisQuery(query)) {
+      } else if (this.isMarketAnalysisQuery(query)) {
         return await this.handleMarketAnalysis(query);
-      }
-      
-      if (this.isSustainabilityQuery(query)) {
+      } else if (this.isSustainabilityQuery(query)) {
         return await this.handleSustainabilityQuery(query);
-      }
-      
-      if (this.isInvestmentQuery(query)) {
+      } else if (this.isInvestmentQuery(query)) {
         return await this.handleInvestmentQuery(query);
+      } else {
+        return await this.handleDefaultCryptoQuery(query);
       }
-      
-      return await this.handleDefaultCryptoQuery(query);
-      
     } catch (error) {
       console.error('Crypto query error:', error);
       return {
@@ -412,7 +458,7 @@ class CryptoBuddyAIService {
     ]);
     
     return {
-      message: `🚀 **CryptoBuddy - Your Professional Crypto Intelligence Platform**\n\n` +
+      message: `🚀 **CryptoBud - Your Proprietary Crypto Intelligence Platform**\n\n` +
               `I'm here to help you navigate the cryptocurrency world with real-time data and expert analysis!\n\n` +
               `📊 **Current Market Snapshot:**\n` +
               `• Total Market Cap: ${cryptoAPI.formatMarketCap(globalData.data.total_market_cap.usd)}\n` +
@@ -526,4 +572,4 @@ class CryptoBuddyAIService {
   }
 }
 
-export const aiService = new CryptoBuddyAIService();
+export const aiService = new CryptoBudAIService();
