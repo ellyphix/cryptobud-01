@@ -53,7 +53,7 @@ export interface NewsArticle {
 
 class CryptoAPIService {
   private readonly COINGECKO_BASE = 'https://api.coingecko.com/api/v3';
-  private readonly CACHE_DURATION = 2 * 60 * 1000; // 2 minutes for more frequent updates
+  private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes for better resilience
   private cache = new Map<string, { data: any; timestamp: number }>();
   private requestQueue: Promise<any>[] = [];
   private readonly MAX_CONCURRENT_REQUESTS = 3;
