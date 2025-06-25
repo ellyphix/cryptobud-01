@@ -31,6 +31,14 @@ class CryptoBudAIService {
     capabilities: ['what can you do', 'your features', 'abilities', 'functions']
   };
 
+  // Enhanced AI models for different use cases
+  private readonly aiModels = {
+    conversational: 'microsoft/DialoGPT-medium',
+    general: 'microsoft/DialoGPT-large',
+    creative: 'gpt2',
+    fallback: 'distilbert-base-uncased-finetuned-sst-2-english'
+  };
+
   async processQuery(query: string): Promise<AIResponse> {
     const lowerQuery = query.toLowerCase();
     
@@ -49,7 +57,8 @@ class CryptoBudAIService {
       } else if (this.isCryptoRelated(lowerQuery)) {
         return await this.handleCryptoQuery(lowerQuery);
       } else {
-        return await this.handleGeneralQuery(query);
+        // Enhanced general query handling with multiple AI models
+        return await this.handleGeneralQueryWithAI(query);
       }
     } catch (error) {
       console.error('AI Service Error:', error);
@@ -105,14 +114,14 @@ class CryptoBudAIService {
 
   private handleHelpRequest(): AIResponse {
     return {
-      message: `🆘 **CryptoBud Help Center**\n\nI'm here to assist you with:\n\n📊 **Crypto Analysis:**\n• Real-time prices and market data\n• Technical analysis and trends\n• Market cap and volume information\n\n💰 **Investment Guidance:**\n• Portfolio recommendations\n• Risk assessments\n• Profit/loss calculations\n\n🌱 **Sustainability Insights:**\n• Energy consumption analysis\n• Eco-friendly crypto rankings\n• Environmental impact scores\n\n🤖 **General Assistance:**\n• Answer questions on any topic\n• Explain complex concepts\n• Provide educational content\n\n💡 **How to use me:**\n• Ask specific questions like "What's Bitcoin's price?"\n• Request comparisons like "Compare ETH vs ADA"\n• Seek advice like "Should I invest in Solana?"\n• Or just chat naturally!\n\nWhat would you like help with specifically?`,
+      message: `🆘 **CryptoBud Help Center**\n\nI'm here to assist you with:\n\n📊 **Crypto Analysis:**\n• Real-time prices and market data\n• Technical analysis and trends\n• Market cap and volume information\n\n💰 **Investment Guidance:**\n• Portfolio recommendations\n• Risk assessments\n• Profit/loss calculations\n\n🌱 **Sustainability Insights:**\n• Energy consumption analysis\n• Eco-friendly crypto rankings\n• Environmental impact scores\n\n🤖 **General Assistance:**\n• Answer questions on any topic\n• Explain complex concepts\n• Provide educational content\n• Have natural conversations\n\n💡 **How to use me:**\n• Ask specific questions like "What's Bitcoin's price?"\n• Request comparisons like "Compare ETH vs ADA"\n• Seek advice like "Should I invest in Solana?"\n• Ask general questions like "What's the weather like?"\n• Or just chat naturally!\n\nWhat would you like help with specifically?`,
       confidence: 0.95
     };
   }
 
   private handleCapabilitiesQuery(): AIResponse {
     return {
-      message: `🚀 **CryptoBud Capabilities Overview**\n\nI'm a proprietary AI-powered cryptocurrency intelligence platform with advanced features:\n\n🧠 **AI Decision-Making:**\n• Pattern recognition in market data\n• Sentiment analysis of queries\n• Risk assessment algorithms\n• Predictive modeling for trends\n\n📊 **Real-Time Data Processing:**\n• Live price feeds from CoinGecko API\n• Market cap and volume analysis\n• Technical indicator calculations\n• News sentiment integration\n\n🌱 **Sustainability Analysis:**\n• Energy consumption tracking\n• Environmental impact scoring\n• Eco-friendly investment recommendations\n\n💼 **Investment Intelligence:**\n• Portfolio optimization suggestions\n• Risk-reward analysis\n• Market timing insights\n• Diversification strategies\n\n🗣️ **Natural Language Processing:**\n• Understanding complex queries\n• Context-aware responses\n• Multi-intent recognition\n• Conversation flow management\n\nI combine if-else logic with advanced AI to provide accurate, helpful responses tailored to your needs!`,
+      message: `🚀 **CryptoBud Capabilities Overview**\n\nI'm a proprietary AI-powered cryptocurrency intelligence platform with advanced features:\n\n🧠 **AI Decision-Making:**\n• Pattern recognition in market data\n• Sentiment analysis of queries\n• Risk assessment algorithms\n• Predictive modeling for trends\n• General conversation abilities\n\n📊 **Real-Time Data Processing:**\n• Live price feeds from CoinGecko API\n• Market cap and volume analysis\n• Technical indicator calculations\n• News sentiment integration\n\n🌱 **Sustainability Analysis:**\n• Energy consumption tracking\n• Environmental impact scoring\n• Eco-friendly investment recommendations\n\n💼 **Investment Intelligence:**\n• Portfolio optimization suggestions\n• Risk-reward analysis\n• Market timing insights\n• Diversification strategies\n\n🗣️ **Natural Language Processing:**\n• Understanding complex queries\n• Context-aware responses\n• Multi-intent recognition\n• Conversation flow management\n• General knowledge Q&A\n\n🤖 **General AI Assistant:**\n• Answer questions on any topic\n• Help with calculations and problem-solving\n• Provide explanations and educational content\n• Engage in natural conversations\n\nI combine if-else logic with advanced AI to provide accurate, helpful responses tailored to your needs!`,
       confidence: 0.95
     };
   }
@@ -130,65 +139,139 @@ class CryptoBudAIService {
     return cryptoKeywords.some(keyword => query.includes(keyword));
   }
 
-  private async handleGeneralQuery(query: string): Promise<AIResponse> {
-    try {
-      const response = await axios.post(
-        'https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium',
-        {
-          inputs: query,
-          parameters: {
-            max_length: 200,
-            temperature: 0.7,
-            do_sample: true
-          }
-        },
-        {
-          headers: {
-            'Authorization': 'Bearer hf_demo',
-            'Content-Type': 'application/json'
-          },
-          timeout: 10000
-        }
-      );
+  private async handleGeneralQueryWithAI(query: string): Promise<AIResponse> {
+    // Try multiple AI approaches for better coverage
+    const approaches = [
+      () => this.tryHuggingFaceAPI(query),
+      () => this.tryOpenAICompatibleAPI(query),
+      () => this.handleSpecialCases(query),
+      () => this.generateSmartFallback(query)
+    ];
 
-      if (response.data && response.data[0] && response.data[0].generated_text) {
-        let aiResponse = response.data[0].generated_text.replace(query, '').trim();
-        aiResponse = aiResponse.replace(/^[:\-\s]+/, '').trim();
-        
-        if (aiResponse.length < 10) {
-          throw new Error('Response too short');
+    for (const approach of approaches) {
+      try {
+        const result = await approach();
+        if (result && result.message.length > 10) {
+          return result;
         }
-
-        return {
-          message: `🤖 ${aiResponse}\n\n💡 *I'm CryptoBud, specialized in cryptocurrency! For crypto-related questions, I can provide real-time market data and detailed analysis.*`,
-          sources: ['Advanced AI Processing'],
-          confidence: 0.8
-        };
-      } else {
-        throw new Error('Invalid AI response');
+      } catch (error) {
+        console.log('Trying next AI approach...');
+        continue;
       }
-    } catch (error) {
-      console.error('General AI query error:', error);
-      return this.handleGeneralQueryFallback(query);
     }
+
+    // Final fallback
+    return this.generateIntelligentFallback(query);
   }
 
-  private handleGeneralQueryFallback(query: string): AIResponse {
+  private async tryHuggingFaceAPI(query: string): Promise<AIResponse> {
+    const models = [
+      'microsoft/DialoGPT-medium',
+      'microsoft/DialoGPT-large',
+      'facebook/blenderbot-400M-distill'
+    ];
+
+    for (const model of models) {
+      try {
+        const response = await axios.post(
+          `https://api-inference.huggingface.co/models/${model}`,
+          {
+            inputs: query,
+            parameters: {
+              max_length: 200,
+              temperature: 0.7,
+              do_sample: true,
+              pad_token_id: 50256
+            }
+          },
+          {
+            headers: {
+              'Authorization': 'Bearer hf_demo',
+              'Content-Type': 'application/json'
+            },
+            timeout: 15000
+          }
+        );
+
+        if (response.data && response.data[0] && response.data[0].generated_text) {
+          let aiResponse = response.data[0].generated_text.replace(query, '').trim();
+          aiResponse = aiResponse.replace(/^[:\-\s]+/, '').trim();
+          
+          if (aiResponse.length > 10 && !aiResponse.includes('undefined')) {
+            return {
+              message: `🤖 ${aiResponse}\n\n💡 *I'm CryptoBud, specialized in cryptocurrency! For crypto-related questions, I can provide real-time market data and detailed analysis.*`,
+              sources: [`Hugging Face ${model}`],
+              confidence: 0.8
+            };
+          }
+        }
+      } catch (error) {
+        console.log(`Model ${model} failed, trying next...`);
+        continue;
+      }
+    }
+
+    throw new Error('All Hugging Face models failed');
+  }
+
+  private async tryOpenAICompatibleAPI(query: string): Promise<AIResponse> {
+    // Try free OpenAI-compatible APIs
+    const apis = [
+      {
+        url: 'https://api.deepseek.com/v1/chat/completions',
+        key: 'demo'
+      }
+    ];
+
+    for (const api of apis) {
+      try {
+        const response = await axios.post(
+          api.url,
+          {
+            model: 'deepseek-chat',
+            messages: [
+              {
+                role: 'system',
+                content: 'You are a helpful AI assistant. Provide concise, accurate, and friendly responses.'
+              },
+              {
+                role: 'user',
+                content: query
+              }
+            ],
+            max_tokens: 150,
+            temperature: 0.7
+          },
+          {
+            headers: {
+              'Authorization': `Bearer ${api.key}`,
+              'Content-Type': 'application/json'
+            },
+            timeout: 10000
+          }
+        );
+
+        if (response.data?.choices?.[0]?.message?.content) {
+          return {
+            message: `🤖 ${response.data.choices[0].message.content}\n\n💡 *I'm CryptoBud, specialized in cryptocurrency! For crypto-related questions, I can provide real-time market data and detailed analysis.*`,
+            sources: ['DeepSeek AI'],
+            confidence: 0.85
+          };
+        }
+      } catch (error) {
+        console.log('OpenAI-compatible API failed, trying next...');
+        continue;
+      }
+    }
+
+    throw new Error('All OpenAI-compatible APIs failed');
+  }
+
+  private handleSpecialCases(query: string): AIResponse {
     const lowerQuery = query.toLowerCase();
     
-    // If-else logic for common general queries
-    if (/weather|temperature|rain|sunny|cloudy/.test(lowerQuery)) {
-      return {
-        message: "🌤️ I don't have access to real-time weather data, but I can tell you that the crypto markets are always experiencing their own kind of weather! 📈📉\n\nFor actual weather information, I'd recommend checking a weather app or website. But if you want to know about the 'market weather' - whether it's a bull or bear market - I'm your expert! 🐂🐻",
-        confidence: 0.8
-      };
-    } else if (/what time|current time|time is it/.test(lowerQuery)) {
-      const currentTime = new Date().toLocaleString();
-      return {
-        message: `🕐 The current time is ${currentTime}.\n\n⏰ Fun fact: Cryptocurrency markets never sleep! They trade 24/7, 365 days a year. Unlike traditional stock markets, you can buy and sell crypto anytime. Would you like to check the current crypto prices?`,
-        confidence: 0.9
-      };
-    } else if (/calculate|math|plus|minus|multiply|divide|\+|\-|\*|\/|\d+/.test(lowerQuery)) {
+    // Math calculations
+    if (/calculate|math|plus|minus|multiply|divide|\+|\-|\*|\/|\d+/.test(lowerQuery)) {
       try {
         const mathExpression = lowerQuery.match(/[\d+\-*/\s().]+/);
         if (mathExpression) {
@@ -197,18 +280,84 @@ class CryptoBudAIService {
             const result = Function('"use strict"; return (' + safeExpression + ')')();
             return {
               message: `🧮 **Calculation Result:** ${safeExpression} = ${result}\n\n💰 Speaking of calculations, I can also help you calculate crypto profits, losses, and portfolio values! Just ask me about any cryptocurrency investment scenarios.`,
-              confidence: 0.9
+              confidence: 0.95
             };
           }
         }
       } catch (error) {
-        // Fall through to default response
+        // Fall through to other methods
       }
     }
+
+    // Time queries
+    if (/what time|current time|time is it/.test(lowerQuery)) {
+      const currentTime = new Date().toLocaleString();
+      return {
+        message: `🕐 The current time is ${currentTime}.\n\n⏰ Fun fact: Cryptocurrency markets never sleep! They trade 24/7, 365 days a year. Unlike traditional stock markets, you can buy and sell crypto anytime. Would you like to check the current crypto prices?`,
+        confidence: 0.9
+      };
+    }
+
+    // Weather queries
+    if (/weather|temperature|rain|sunny|cloudy/.test(lowerQuery)) {
+      return {
+        message: "🌤️ I don't have access to real-time weather data, but I can tell you that the crypto markets are always experiencing their own kind of weather! 📈📉\n\nFor actual weather information, I'd recommend checking a weather app or website. But if you want to know about the 'market weather' - whether it's a bull or bear market - I'm your expert! 🐂🐻",
+        confidence: 0.8
+      };
+    }
+
+    // Programming questions
+    if (/code|programming|javascript|python|html|css/.test(lowerQuery)) {
+      return {
+        message: "💻 I can help with basic programming concepts! While I'm primarily specialized in cryptocurrency analysis, I have knowledge of various programming languages and concepts.\n\n🚀 **What I can help with:**\n• JavaScript, Python, HTML, CSS basics\n• General programming concepts\n• Code explanations\n• Algorithm discussions\n\nFor advanced programming help, I'd recommend specialized coding platforms. But feel free to ask me anything, and I'll do my best to help!\n\n💡 *Did you know? Many cryptocurrencies are built using different programming languages - Bitcoin uses C++, Ethereum uses Solidity for smart contracts!*",
+        confidence: 0.7
+      };
+    }
+
+    throw new Error('No special case matched');
+  }
+
+  private generateSmartFallback(query: string): AIResponse {
+    const keywords = query.toLowerCase().split(' ').filter(word => word.length > 3);
+    const responses = [
+      `That's an interesting question about ${keywords[0] || 'that topic'}! While I'm primarily specialized in cryptocurrency analysis, I'll do my best to help.`,
+      `I understand you're asking about ${keywords.slice(0, 2).join(' and ') || 'that subject'}. Let me share what I know and see how I can assist you.`,
+      `Great question! While my expertise is in cryptocurrency and blockchain technology, I can certainly try to help with ${keywords[0] || 'your question'}.`
+    ];
+
+    const baseResponse = responses[Math.floor(Math.random() * responses.length)];
     
     return {
-      message: `🤔 That's an interesting question! While I'm primarily specialized in cryptocurrency analysis and market data, I can try to help with general topics too.\n\n💡 **Here's what I'm best at:**\n• Cryptocurrency prices and analysis\n• Market trends and predictions\n• Investment advice and risk assessment\n• Blockchain technology explanations\n• General conversations\n\nCould you rephrase your question or ask me something about crypto? I'd love to show you my expertise! 🚀`,
+      message: `🤔 ${baseResponse}\n\n💡 **Here's what I'm best at:**\n• Cryptocurrency prices and analysis\n• Market trends and predictions\n• Investment advice and risk assessment\n• Blockchain technology explanations\n• General conversations and Q&A\n\nCould you provide more details about what you'd like to know? I'm here to help! 🚀`,
       confidence: 0.6
+    };
+  }
+
+  private generateIntelligentFallback(query: string): AIResponse {
+    const queryLength = query.split(' ').length;
+    const hasQuestion = query.includes('?');
+    
+    let response = "🤖 I'm CryptoBud, your advanced AI assistant! ";
+    
+    if (queryLength < 3) {
+      response += "I'd love to help you with that. Could you provide a bit more detail about what you're looking for?";
+    } else if (hasQuestion) {
+      response += "That's a thoughtful question! While I specialize in cryptocurrency analysis, I'm equipped to help with a wide range of topics.";
+    } else {
+      response += "I understand what you're getting at. Let me see how I can best assist you with that.";
+    }
+
+    response += "\n\n💡 **I can help you with:**\n";
+    response += "• Cryptocurrency analysis and market data\n";
+    response += "• Investment strategies and risk assessment\n";
+    response += "• General questions and conversations\n";
+    response += "• Calculations and problem-solving\n";
+    response += "• Educational content and explanations\n\n";
+    response += "What specific aspect would you like to explore? I'm here to provide the best assistance possible! 🌟";
+
+    return {
+      message: response,
+      confidence: 0.7
     };
   }
 
