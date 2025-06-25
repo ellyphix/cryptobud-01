@@ -56,19 +56,7 @@ CryptoBud is a proprietary, advanced cryptocurrency intelligence platform that c
 ## 📸 Screenshots
 
 ### Main Dashboard
-![CryptoBud Dashboard](https://images.pexels.com/photos/6801648/pexels-photo-6801648.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop)
-
-*Real-time cryptocurrency dashboard with live prices, market analysis, and AI chat interface*
-
-### Chat Interface
-![AI Chat Interface](https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop)
-
-*Advanced AI chatbot providing cryptocurrency analysis and investment insights*
-
-### Market Analysis
-![Market Analysis](https://images.pexels.com/photos/6802042/pexels-photo-6802042.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop)
-
-*Comprehensive market analysis with sustainability scoring and risk assessment*
+![CryptoBud Dashboard]((https://postimg.cc/18SqwrFT))
 
 ### Python CLI Interface
 ```
@@ -207,7 +195,7 @@ This is a proprietary project, but we welcome feedback and suggestions:
 
 For support, questions, or feature requests:
 - Create an issue on GitHub
-- Contact: [your-email@example.com]
+- Contact: [ellyphix@gmail.com]
 
 ## 🔮 Roadmap
 
