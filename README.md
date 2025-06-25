@@ -1,10 +1,12 @@
 # CryptoBud - Proprietary Cryptocurrency Intelligence Platform
 
-![CryptoBud Logo](https://via.placeholder.com/800x200/1f2937/10b981?text=CryptoBud%20-%20Crypto%20Intelligence%20Platform)
+![CryptoBud Banner](https://images.pexels.com/photos/730547/pexels-photo-730547.jpeg?auto=compress&cs=tinysrgb&w=800&h=200&fit=crop)
 
 ## 🚀 Overview
 
 CryptoBud is a proprietary, advanced cryptocurrency intelligence platform that combines real-time market data with sophisticated AI analysis. Built with React, TypeScript, and Python, it provides professional-grade crypto insights, sustainability analysis, and investment guidance.
+
+**How does this chatbot mimic basic AI decision-making?** CryptoBud demonstrates AI decision-making through pattern recognition in market data, if-else logic trees for investment recommendations, natural language processing for query understanding, adaptive responses based on conversation context, and multi-factor analysis weighing variables like price trends, market sentiment, and environmental impact simultaneously.
 
 ## ✨ Features
 
@@ -13,6 +15,7 @@ CryptoBud is a proprietary, advanced cryptocurrency intelligence platform that c
 - **Natural Language Processing**: Understands complex queries and provides contextual answers
 - **Real-time Market Integration**: Live data from CoinGecko API for accurate analysis
 - **Conversation Flow Management**: ChatterBot integration for natural dialogue
+- **General AI Assistant**: Handles any question using multiple AI models
 
 ### 📊 Market Intelligence
 - **Live Price Tracking**: Real-time cryptocurrency prices and trends
@@ -53,24 +56,41 @@ CryptoBud is a proprietary, advanced cryptocurrency intelligence platform that c
 ## 📸 Screenshots
 
 ### Main Dashboard
-![Dashboard](https://via.placeholder.com/800x600/1f2937/10b981?text=CryptoBud%20Dashboard%20-%20Real-time%20Crypto%20Intelligence)
+![CryptoBud Dashboard](https://images.pexels.com/photos/6801648/pexels-photo-6801648.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop)
 
 *Real-time cryptocurrency dashboard with live prices, market analysis, and AI chat interface*
 
 ### Chat Interface
-![Chat Interface](https://via.placeholder.com/800x600/ffffff/1f2937?text=AI%20Chat%20Interface%20-%20Natural%20Language%20Crypto%20Analysis)
+![AI Chat Interface](https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop)
 
 *Advanced AI chatbot providing cryptocurrency analysis and investment insights*
 
 ### Market Analysis
-![Market Analysis](https://via.placeholder.com/800x600/f3f4f6/1f2937?text=Market%20Analysis%20-%20Professional%20Crypto%20Insights)
+![Market Analysis](https://images.pexels.com/photos/6802042/pexels-photo-6802042.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop)
 
 *Comprehensive market analysis with sustainability scoring and risk assessment*
 
-### Python CLI
-![Python CLI](https://via.placeholder.com/800x400/000000/00ff00?text=CryptoBud%20Python%20CLI%20-%20Terminal%20Interface)
+### Python CLI Interface
+```
+🚀 CryptoBud - Proprietary Cryptocurrency Intelligence Platform
+============================================================
+Welcome! I'm your AI crypto assistant with real-time data.
+Ask me about prices, sustainability, or general crypto questions.
+Type 'quit' to exit.
 
-*Command-line interface for advanced crypto analysis and bot interaction*
+You: What's Bitcoin's price?
+CryptoBud: 💰 BTC is currently trading at $43,250.00 (24h change: +2.4%). 
+Remember, crypto prices are highly volatile!
+
+You: Compare Ethereum vs Cardano sustainability
+CryptoBud: 🌱 Ethereum has a sustainability score of 8/10 with 0.0026 kWh per 
+transaction after transitioning to Proof of Stake. Cardano scores 9/10 with 
+0.0015 kWh per transaction, making it slightly more eco-friendly.
+
+You: What's 25 * 4?
+CryptoBud: 🧮 25 * 4 = 100. Speaking of calculations, I can also help you 
+calculate crypto profits and portfolio values!
+```
 
 ## 🚀 Quick Start
 
